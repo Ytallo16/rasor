@@ -1,17 +1,48 @@
 import { useState } from 'react';
+import { IoExitOutline } from "react-icons/io5";
+import { FaUserCircle } from "react-icons/fa";
+import CadastroObjeto from './pages/CadastroObjeto';
+import AcompanhamentoObjeto from './pages/AcompanhamentoObjeto';
+import AdicionarInformacoes from './pages/AdicionarInformacoes';
 
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState('cadastro');
 
-  const toggleTab = (tab) => {
+  const toggleTab = (tab: string) => {
     setActiveTab(tab);
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'cadastro':
+        return <CadastroObjeto />;
+      case 'acompanhamento':
+        return <AcompanhamentoObjeto />;
+      case 'adicionar':
+        return <AdicionarInformacoes />;
+      default:
+        return <CadastroObjeto />;
+    }
   };
 
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white h-screen">
-        <div className="flex flex-col py-4">
+      <div className="w-64 bg-gray-800 text-white h-screen flex flex-col">
+        {/* Informações do Usuário */}
+        <div className="p-4 border-b border-gray-700">
+          <div className="flex items-center gap-3 mb-3">
+            <FaUserCircle className="text-3xl text-gray-400" />
+            <div className="flex flex-col">
+              <span className="font-medium">João da Silva</span>
+            </div>
+          </div>
+          <div className="text-sm text-gray-400">
+            CPF: 123.456.789-00
+          </div>
+        </div>
+
+        <div className="flex-1 flex flex-col py-4">
           <button
             onClick={() => toggleTab('cadastro')}
             className={`py-2 px-4 text-left ${activeTab === 'cadastro' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
@@ -24,23 +55,28 @@ const Sidebar = () => {
           >
             Acompanhamento de Objeto
           </button>
+          <button
+            onClick={() => toggleTab('adicionar')}
+            className={`py-2 px-4 text-left ${activeTab === 'adicionar' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
+          >
+            Adicionar Informações
+          </button>
+        </div>
+        {/* Botão de Logout */}
+        <div className="p-4 border-t border-gray-700">
+          <button
+            onClick={() => console.log('Logout clicked')}
+            className="w-full py-2 px-4 text-left text-red-300 hover:text-red-400 rounded flex items-center gap-2 transition-colors duration-200"
+          >
+            <IoExitOutline className="text-xl" />
+            Sair
+          </button>
         </div>
       </div>
 
       {/* Conteúdo Principal */}
-      <div className="flex-1 p-4">
-        {activeTab === 'cadastro' && (
-          <div>
-            <h1 className="text-2xl font-semibold text-center">Cadastro de Objeto</h1>
-            {/* Adicione o formulário ou o conteúdo relevante aqui */}
-          </div>
-        )}
-        {activeTab === 'acompanhamento' && (
-          <div>
-            <h1 className="text-2xl font-semibold text-center">Acompanhamento de Objeto</h1>
-            {/* Adicione o conteúdo relevante para o acompanhamento aqui */}
-          </div>
-        )}
+      <div className="flex-1 bg-gray-100">
+        {renderContent()}
       </div>
     </div>
   );
