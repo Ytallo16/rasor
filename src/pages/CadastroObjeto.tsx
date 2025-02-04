@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FaFileUpload } from 'react-icons/fa';
 
 type TipoObjeto = 'carro' | 'celular' | 'notebook';
 
@@ -13,6 +14,8 @@ const CadastroObjeto = () => {
   const [identificador, setIdentificador] = useState('');
   const [descricao, setDescricao] = useState('');
   const [arquivo, setArquivo] = useState<File | null>(null);
+  const [nomeArquivo, setNomeArquivo] = useState('');
+  const [telefone, setTelefone] = useState('');
 
   const camposEspecificos: CampoEspecifico = {
     carro: 'Número do Chassi',
@@ -23,6 +26,22 @@ const CadastroObjeto = () => {
   const handleArquivoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setArquivo(event.target.files[0]);
+      setNomeArquivo(event.target.files[0].name);
+    }
+  };
+
+  const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+    
+    if (value.length <= 11) {
+      // Formata o número conforme vai digitando
+      if (value.length > 2) {
+        value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+      }
+      if (value.length > 9) {
+        value = `${value.slice(0, 9)}-${value.slice(9)}`;
+      }
+      setTelefone(value);
     }
   };
 
@@ -33,7 +52,8 @@ const CadastroObjeto = () => {
       tipoObjeto,
       identificador,
       descricao,
-      arquivo
+      arquivo,
+      telefone
     });
   };
 
@@ -75,17 +95,43 @@ const CadastroObjeto = () => {
           </div>
         )}
 
+        {/* Campo de telefone */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">Telefone para Contato</label>
+          <input
+            type="text"
+            value={telefone}
+            onChange={handleTelefoneChange}
+            className="w-full p-2 border rounded-md"
+            placeholder="(00) 00000-0000"
+            required
+            maxLength={15}
+          />
+        </div>
+
         {/* Upload de arquivo */}
         <div className="space-y-2">
           <label className="block text-sm font-medium">
             Adicionar Imagem ou Vídeo
           </label>
-          <input
-            type="file"
-            onChange={handleArquivoChange}
-            accept="image/*,video/*"
-            className="w-full p-2 border rounded-md"
-          />
+          <div className="relative">
+            <input
+              type="file"
+              onChange={handleArquivoChange}
+              accept="image/*,video/*"
+              className="hidden"
+              id="arquivo"
+            />
+            <label
+              htmlFor="arquivo"
+              className="flex items-center gap-2 w-full p-2 border rounded-md bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+            >
+              <FaFileUpload className="text-blue-600 text-xl" />
+              <span className="text-gray-600">
+                {nomeArquivo || 'Escolha um arquivo...'}
+              </span>
+            </label>
+          </div>
         </div>
 
         {/* Campo de descrição */}
