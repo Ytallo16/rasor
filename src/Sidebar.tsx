@@ -27,8 +27,8 @@ const Sidebar = () => {
 
   return (
     <div className="flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white h-screen flex flex-col">
+      {/* Sidebar - Adicionado fixed e h-screen */}
+      <div className="fixed w-64 bg-gray-800 text-white h-screen flex flex-col">
         {/* Informações do Usuário */}
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center gap-3 mb-3">
@@ -42,7 +42,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col py-4">
+        <div className="flex-1 flex flex-col py-4 overflow-y-auto">
           <button
             onClick={() => toggleTab('cadastro')}
             className={`py-2 px-4 text-left ${activeTab === 'cadastro' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
@@ -74,8 +74,8 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Conteúdo Principal */}
-      <div className="flex-1 bg-gray-100">
+      {/* Conteúdo Principal - Adicionado ml-64 para compensar a largura da sidebar fixa */}
+      <div className="flex-1 ml-64 bg-gray-100 min-h-screen">
         {renderContent()}
       </div>
     </div>
