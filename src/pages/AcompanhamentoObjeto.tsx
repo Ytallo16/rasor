@@ -5,6 +5,7 @@ interface StatusObjeto {
   status: string;
   dataAtualizacao: string;
   mensagem: string;
+  distrito?: string;
 }
 
 const AcompanhamentoObjeto = () => {
@@ -25,16 +26,39 @@ const AcompanhamentoObjeto = () => {
     setStatusObjeto(null);
 
     try {
-      // Aqui você implementará a chamada à API real
-      // Simulando uma chamada à API com timeout
+      // Simulando delay da API
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Dados mockados para exemplo
-      setStatusObjeto({
-        status: 'Em análise',
-        dataAtualizacao: new Date().toLocaleDateString(),
-        mensagem: 'Objeto em processo de verificação'
-      });
+      // Lógica mockada baseada no código
+      switch (codigoHash) {
+        case '1':
+          setStatusObjeto({
+            status: 'Em análise',
+            dataAtualizacao: new Date().toLocaleDateString(),
+            mensagem: 'Ainda não foram apuradas informações sobre o objeto.'
+          });
+          break;
+        
+        case '2':
+          setStatusObjeto({
+            status: 'Apreendido',
+            dataAtualizacao: new Date().toLocaleDateString(),
+            mensagem: 'O objeto foi apreendido e está em processo de devolução.'
+          });
+          break;
+        
+        case '3':
+          setStatusObjeto({
+            status: 'Pronto para Retirada',
+            dataAtualizacao: new Date().toLocaleDateString(),
+            mensagem: 'O objeto está pronto para retirada.',
+            distrito: '5º Distrito Policial - Centro'
+          });
+          break;
+        
+        default:
+          setErro('Nenhum objeto foi encontrado com o código informado.');
+      }
     } catch (error) {
       setErro('Erro ao buscar status do objeto. Tente novamente.');
     } finally {
@@ -90,7 +114,15 @@ const AcompanhamentoObjeto = () => {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm text-gray-600">Status atual:</p>
-                  <p className="font-medium text-gray-800">{statusObjeto.status}</p>
+                  <p className={`font-medium text-lg ${
+                    statusObjeto.status === 'Pronto para Retirada' 
+                      ? 'text-green-600' 
+                      : statusObjeto.status === 'Apreendido'
+                        ? 'text-blue-600'
+                        : 'text-yellow-600'
+                  }`}>
+                    {statusObjeto.status}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Última atualização:</p>
@@ -100,6 +132,12 @@ const AcompanhamentoObjeto = () => {
                   <p className="text-sm text-gray-600">Mensagem:</p>
                   <p className="font-medium text-gray-800">{statusObjeto.mensagem}</p>
                 </div>
+                {statusObjeto.distrito && (
+                  <div>
+                    <p className="text-sm text-gray-600">Local para Retirada:</p>
+                    <p className="font-medium text-gray-800">{statusObjeto.distrito}</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
