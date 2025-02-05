@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IoExitOutline } from "react-icons/io5";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaClipboardList, FaSearchLocation, FaEdit } from "react-icons/fa";
 import CadastroObjeto from './pages/CadastroObjeto';
 import AcompanhamentoObjeto from './pages/AcompanhamentoObjeto';
 import AdicionarInformacoes from './pages/AdicionarInformacoes';
@@ -45,20 +45,23 @@ const Sidebar = () => {
         <div className="flex-1 flex flex-col py-4 overflow-y-auto">
           <button
             onClick={() => toggleTab('cadastro')}
-            className={`py-2 px-4 text-left ${activeTab === 'cadastro' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
+            className={`py-2 px-4 text-left flex items-center gap-3 ${activeTab === 'cadastro' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
           >
+            <FaClipboardList className="text-xl" />
             Cadastro de Objeto
           </button>
           <button
             onClick={() => toggleTab('acompanhamento')}
-            className={`py-2 px-4 text-left ${activeTab === 'acompanhamento' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
+            className={`py-2 px-4 text-left flex items-center gap-3 ${activeTab === 'acompanhamento' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
           >
+            <FaSearchLocation className="text-xl" />
             Acompanhamento de Objeto
           </button>
           <button
             onClick={() => toggleTab('adicionar')}
-            className={`py-2 px-4 text-left ${activeTab === 'adicionar' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
+            className={`py-2 px-4 text-left flex items-center gap-3 ${activeTab === 'adicionar' ? 'bg-blue-800' : 'hover:bg-blue-700'}`}
           >
+            <FaEdit className="text-xl" />
             Adicionar Informações
           </button>
         </div>
