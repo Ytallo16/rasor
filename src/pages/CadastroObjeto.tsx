@@ -42,12 +42,11 @@ const CadastroObjeto = () => {
   // Estados para UF, cidade e bairro
   const [ufs, setUfs] = useState<UF[]>([]);
   const [cidades, setCidades] = useState<Cidade[]>([]);
-  const [bairros, setBairros] = useState<Bairro[]>([]);
   const [ufSelecionada, setUfSelecionada] = useState<number | ''>('');
   const [cidadeSelecionada, setCidadeSelecionada] = useState<number | ''>('');
-  const [bairroSelecionado, setBairroSelecionado] = useState<number | ''>('');
+  const [bairro, setBairro] = useState('');
+  const [pontoReferencia, setPontoReferencia] = useState('');
   const [carregandoCidades, setCarregandoCidades] = useState(false);
-  const [carregandoBairros, setCarregandoBairros] = useState(false);
 
   // Buscar UFs ao carregar o componente
   useEffect(() => {
@@ -79,31 +78,10 @@ const CadastroObjeto = () => {
         setCidades([]);
       }
       setCidadeSelecionada('');
-      setBairroSelecionado('');
+      setBairro('');
     };
     fetchCidades();
   }, [ufSelecionada]);
-
-  // Buscar bairros quando cidade for selecionada
-  useEffect(() => {
-    const fetchBairros = async () => {
-      if (cidadeSelecionada) {
-        setCarregandoBairros(true);
-        try {
-          const data = await getBairrosByCidade(cidadeSelecionada);
-          setBairros(data);
-        } catch (error) {
-          console.error('Erro ao buscar bairros:', error);
-        } finally {
-          setCarregandoBairros(false);
-        }
-      } else {
-        setBairros([]);
-      }
-      setBairroSelecionado('');
-    };
-    fetchBairros();
-  }, [cidadeSelecionada]);
 
   const camposEspecificos: CampoEspecifico = {
     veiculo: 'Número do Chassi',
@@ -145,7 +123,6 @@ const CadastroObjeto = () => {
     e.preventDefault();
     const ufSelecionadaObj = ufs.find(uf => uf.id === ufSelecionada);
     const cidadeSelecionadaObj = cidades.find(cidade => cidade.id === cidadeSelecionada);
-    const bairroSelecionadoObj = bairros.find(bairro => bairro.id === bairroSelecionado);
 
     console.log({
       cpf,
@@ -156,7 +133,8 @@ const CadastroObjeto = () => {
       endereco: {
         estado: ufSelecionadaObj?.nome || '',
         cidade: cidadeSelecionadaObj?.nome || '',
-        bairro: bairroSelecionadoObj?.nome || ''
+        bairro,
+        pontoReferencia
       },
       notaFiscal,
       descricao,
@@ -228,7 +206,7 @@ const CadastroObjeto = () => {
           </div>
 
           {/* Endereço da Ocorrência */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">Estado</label>
               <select
@@ -267,25 +245,24 @@ const CadastroObjeto = () => {
             </div>
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">Bairro</label>
-              <select
-                value={bairroSelecionado}
-                onChange={(e) => setBairroSelecionado(Number(e.target.value) || '')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+              <input
+                type="text"
+                value={bairro}
+                onChange={(e) => setBairro(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="Digite o nome do bairro"
                 required
-                disabled={!cidadeSelecionada || carregandoBairros}
-              >
-                <option value="">
-                  {carregandoBairros 
-                    ? 'Carregando...' 
-                    : cidadeSelecionada 
-                      ? 'Selecione o bairro'
-                      : 'Selecione uma cidade primeiro'
-                  }
-                </option>
-                {bairros.map(bairro => (
-                  <option key={bairro.id} value={bairro.id}>{bairro.nome}</option>
-                ))}
-              </select>
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">Ponto de Referência</label>
+              <input
+                type="text"
+                value={pontoReferencia}
+                onChange={(e) => setPontoReferencia(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="Ex: Próximo à praça central"
+              />
             </div>
           </div>
 
